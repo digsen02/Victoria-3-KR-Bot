@@ -1,0 +1,14 @@
+{
+  "multi": [
+    {
+      "unique_key": "123ABC",
+      "guild_id": "456XYZ",
+      "host_id": "789QWE",
+      "start_time": "2025-05-15T18:00:00Z",
+      "ruleset": "standard",
+      "min_players": 4,
+      "current_players": 3,
+      "occupied_nations": ["France", "Prussia"]
+    }
+  ]
+}
