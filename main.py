@@ -23,7 +23,7 @@ async def main():
     intents.message_content = True
     bot = commands.Bot(command_prefix="!", intents=intents)
 
-    await bot.load_extension("cogs.slashes.sheduleMadeSlash")
+    await bot.load_extension("cogs.slashes.scheduleMadeSlash")
     await bot.load_extension("cogs.tasks.notifierTask")
     await bot.load_extension("cogs.tasks.cleanerTask")
 
