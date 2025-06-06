@@ -11,7 +11,7 @@ from utils.DateJudg import (
     validate_hour, validate_minute
 )
 
-PLAN_FILE = os.path.join("database", "plans.json")
+PLAN_FILE = os.path.join("database", "multis.json")
 
 class ScheduleMadeSlash(commands.Cog):
     def __init__(self, bot: commands.Bot):

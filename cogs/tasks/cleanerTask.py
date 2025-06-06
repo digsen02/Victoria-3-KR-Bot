@@ -4,7 +4,7 @@ import datetime
 import json
 import os
 
-PLAN_FILE = os.path.join("database", "plans.json")
+PLAN_FILE = os.path.join("database", "multis.json")
 
 class CleanerTask(commands.Cog):
     def __init__(self, bot):
