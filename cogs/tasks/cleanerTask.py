@@ -14,8 +14,12 @@ class CleanerTask(commands.Cog):
     @tasks.loop(hours=24)
     async def cleanup(self):
         now = datetime.datetime.now()
-        with open(PLAN_FILE, "r") as f:
-            plans = json.load(f)
+
+        try:
+            with open(PLAN_FILE, "r", encoding="utf-8") as f:
+                plans = json.load(f)
+        except FileNotFoundError:
+            return
 
         removed = []
         for title, data in list(plans.items()):
@@ -25,13 +29,13 @@ class CleanerTask(commands.Cog):
                 del plans[title]
 
         if removed:
-            with open(PLAN_FILE, "w") as f:
-                json.dump(plans, f, indent=4)
+            with open(PLAN_FILE, "w", encoding="utf-8") as f:
+                json.dump(plans, f, ensure_ascii=False, indent=2)
 
             for guild in self.bot.guilds:
                 for channel in guild.text_channels:
                     try:
-                        await channel.send(f"⏰ 만료된 플랜 삭제됨: {', '.join(removed)}")
+                        await channel.send(f"만료된 플랜 삭제됨: {', '.join(removed)}")
                         break
                     except:
                         continue

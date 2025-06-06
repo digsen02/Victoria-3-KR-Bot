@@ -17,6 +17,17 @@ class ScheduleMadeSlash(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
+    def load_plans(self):
+        try:
+            with open(PLAN_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
+
+    def save_plans(self, plans):
+        with open(PLAN_FILE, "w", encoding="utf-8") as f:
+            json.dump(plans, f, ensure_ascii=False, indent=2)
+
     @app_commands.command(name="make_schedule", description="멀티 플랜을 생성합니다.")
     @app_commands.describe(
         year="연도 (기본값: 올해)",
@@ -50,12 +61,9 @@ class ScheduleMadeSlash(commands.Cog):
 
         date = datetime.datetime(year, month, day, hour, minute)
         title = f"{year}-{month:02}-{day:02}_{hour:02}:{minute:02}"
+        alert_time = (date - datetime.timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M")
 
-        try:
-            with open(PLAN_FILE, "r", encoding="utf-8") as f:
-                plans = json.load(f)
-        except FileNotFoundError:
-            plans = {}
+        plans = self.load_plans()
 
         if title in plans:
             await interaction.response.send_message("이미 해당 시간의 플랜이 존재합니다.", ephemeral=True)
@@ -63,14 +71,14 @@ class ScheduleMadeSlash(commands.Cog):
 
         plans[title] = {
             "date": date.strftime("%Y-%m-%d %H:%M"),
+            "alert_time": alert_time,
             "members": [str(interaction.user.id)],
             "ruleset": ruleset,
             "min_players": min_players,
             "notified": False
         }
 
-        with open(PLAN_FILE, "w", encoding="utf-8") as f:
-            json.dump(plans, f, ensure_ascii=False, indent=2)
+        self.save_plans(plans)
 
         await interaction.response.send_message(
             f"✅ 예약일시: {year}-{month}-{day} {hour}:{minute}\n"
@@ -81,12 +89,7 @@ class ScheduleMadeSlash(commands.Cog):
     @app_commands.command(name="reserve", description="플랜에 예약합니다.")
     @app_commands.describe(title="플랜 제목 (예: 2025-06-09_18:30)")
     async def reserve(self, interaction: discord.Interaction, title: str):
-        try:
-            with open(PLAN_FILE, "r", encoding="utf-8") as f:
-                plans = json.load(f)
-        except FileNotFoundError:
-            await interaction.response.send_message("아직 생성된 플랜이 없습니다.", ephemeral=True)
-            return
+        plans = self.load_plans()
 
         if title not in plans:
             await interaction.response.send_message("해당 제목의 플랜이 없습니다.", ephemeral=True)
@@ -98,41 +101,27 @@ class ScheduleMadeSlash(commands.Cog):
             return
 
         plans[title]["members"].append(user_id)
-
-        with open(PLAN_FILE, "w", encoding="utf-8") as f:
-            json.dump(plans, f, ensure_ascii=False, indent=2)
+        self.save_plans(plans)
 
         await interaction.response.send_message(f"{interaction.user.mention}님이 '{title}' 플랜에 예약되었습니다!")
 
     @app_commands.command(name="delete_schedule", description="플랜을 삭제합니다.")
     @app_commands.describe(title="삭제할 플랜 제목")
     async def delete_schedule(self, interaction: discord.Interaction, title: str):
-        try:
-            with open(PLAN_FILE, "r", encoding="utf-8") as f:
-                plans = json.load(f)
-        except FileNotFoundError:
-            await interaction.response.send_message("플랜 데이터가 없습니다.", ephemeral=True)
-            return
+        plans = self.load_plans()
 
         if title not in plans:
             await interaction.response.send_message("해당 제목의 플랜이 없습니다.", ephemeral=True)
             return
 
         del plans[title]
-
-        with open(PLAN_FILE, "w", encoding="utf-8") as f:
-            json.dump(plans, f, ensure_ascii=False, indent=2)
+        self.save_plans(plans)
 
         await interaction.response.send_message(f"'{title}' 플랜이 삭제되었습니다.")
 
     @app_commands.command(name="show_schedules", description="모든 플랜을 보여줍니다.")
     async def show_schedules(self, interaction: discord.Interaction):
-        try:
-            with open(PLAN_FILE, "r", encoding="utf-8") as f:
-                plans = json.load(f)
-        except FileNotFoundError:
-            await interaction.response.send_message("아직 생성된 플랜이 없습니다.")
-            return
+        plans = self.load_plans()
 
         if not plans:
             await interaction.response.send_message("현재 등록된 플랜이 없습니다.")
