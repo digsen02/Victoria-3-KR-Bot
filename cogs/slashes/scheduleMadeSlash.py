@@ -1,12 +1,11 @@
 from typing import Optional
-import datetime
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils.DateJudg import *
+
 
 class ScheduleMadeSlash(commands.Cog):
-    def __init__(self, bot:commands.Bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
     @app_commands.command(name="make_schedule", description="멀티예약")
     @app_commands.describe(

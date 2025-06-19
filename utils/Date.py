@@ -3,5 +3,5 @@ from abc import *
 
 
 class Timestamp(metaclass=ABCMeta):
-    def timestamp(self):
+    def timetamp(self):
         print("test")
