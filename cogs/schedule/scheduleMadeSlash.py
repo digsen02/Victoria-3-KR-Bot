@@ -6,14 +6,13 @@ import datetime
 import os
 import json
 
-from utils.DateJudg import (
-    validate_year, validate_month, validate_day,
-    validate_hour, validate_minute
-)
+from Victoria3_Discord_Bot.utils.DateJudg import validate_year, validate_month, validate_day, validate_hour, \
+    validate_minute
+
 
 PLAN_FILE = os.path.join("database", "multis.json")
 
-class ScheduleMadeSlash(commands.Cog):
+class ScheduleSlashes(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -38,6 +37,9 @@ class ScheduleMadeSlash(commands.Cog):
         ruleset="룰셋 번호",
         min_players="최소 시작 인원"
     )
+
+
+
     async def make_schedule(
         self,
         interaction: discord.Interaction,
@@ -136,4 +138,4 @@ class ScheduleMadeSlash(commands.Cog):
         await interaction.response.send_message(msg)
 
 async def setup(bot):
-    await bot.add_cog(ScheduleMadeSlash(bot))
+    await bot.add_cog(ScheduleSlashes(bot))

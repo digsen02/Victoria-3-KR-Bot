@@ -11,7 +11,6 @@ class NotifierTask(commands.Cog):
         self.bot = bot
         self.last_checked_minute = None
         self.notify_check.start()
-
     @tasks.loop(minutes=1)
     async def notify_check(self):
         now = datetime.datetime.now()

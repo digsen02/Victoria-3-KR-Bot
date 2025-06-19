@@ -1,14 +1,29 @@
 {
+  "__comment__" : ". 양식은 아래를 따라야함.",
+
   "multi": [
     {
-      "unique_key": "123ABC",
+      "unique_key": "456XYZ_789QWE_2025-05-15T18:00:00Z",
       "guild_id": "456XYZ",
       "host_id": "789QWE",
       "start_time": "2025-05-15T18:00:00Z",
       "ruleset": "standard",
       "min_players": 4,
       "current_players": 3,
-      "occupied_nations": ["France", "Prussia"]
+      "occupied_nations": [
+        "France",
+        "Prussia"
+      ]
     }
-  ]
+  ],
+  "2025-06-20_04:02": {
+    "date": "2025-06-20 04:02",
+    "alert_time": "2025-06-20 03:32",
+    "members": [
+      "721290589340958761"
+    ],
+    "ruleset": 1,
+    "min_players": 3,
+    "notified": false
+  }
 }
