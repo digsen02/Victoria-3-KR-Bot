@@ -76,8 +76,7 @@ class ScheduleSlashes(commands.Cog):
             "alert_time": alert_time,
             "members": [str(interaction.user.id)],
             "ruleset": ruleset,
-            "min_players": min_players,
-            "notified": False
+            "min_players": min_players
         }
 
         self.save_plans(plans)

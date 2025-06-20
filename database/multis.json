@@ -23,7 +23,6 @@
       "721290589340958761"
     ],
     "ruleset": 1,
-    "min_players": 3,
-    "notified": false
+    "min_players": 3
   }
 }
