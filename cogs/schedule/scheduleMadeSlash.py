@@ -67,9 +67,15 @@ class ScheduleSlashes(commands.Cog):
 
         plans = self.load_plans()
 
+        #++
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        if alert_time < now:
+            alert_time = date.strftime("%Y-%m-%d %H:%M")
+
         if title in plans:
             await interaction.response.send_message("이미 해당 시간의 플랜이 존재합니다.", ephemeral=True)
             return
+        #
 
         plans[title] = {
             "date": date.strftime("%Y-%m-%d %H:%M"),
