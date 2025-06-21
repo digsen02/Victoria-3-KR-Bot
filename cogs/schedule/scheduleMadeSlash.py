@@ -68,7 +68,7 @@ class ScheduleMadeSlash(commands.Cog):
             "unique_key": f"{str(interaction.guild.id)}_{interaction.user.id}_{date.strftime("%Y-%m-%d_%H:%M")}",
             "guild_id": str(interaction.guild.id),
             "host_id": str(interaction.user.id),
-            "start_time": date.strftime("%Y-%m-%d_%H:%M"),
+            "start_date": date.strftime("%Y-%m-%d_%H:%M"),
             "ruleset": ruleset,
             "min_players": min_players,
             "members": [str(interaction.user.id)],

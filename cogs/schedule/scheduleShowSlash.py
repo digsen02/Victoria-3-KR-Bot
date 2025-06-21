@@ -1,10 +1,6 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
-from typing import Optional
-import os
-import json
-from utils.DateJudg import *
+from discord import app_commands, Embed
 from utils.dataFileManager import *
 
 
@@ -17,16 +13,21 @@ class ScheduleShowSlash(commands.Cog):
         plans = load_file("database", "multi.json")
 
         if not plans:
-            await interaction.response.send_message("현재 등록된 플랜이 없습니다.")
+            embed = Embed(title="현재 등록된 플랜이 없습니다.", color=0xff0000)
+            embed.set_footer(text="'make_schedule' 명령어를 사용해 플랜을 생성할 수 있습니다.")
+
+            await interaction.response.send_message(embed=embed)
             return
-
-        msg = "**📅 현재 등록된 플랜 목록:**\n"
+        embed = Embed(title="**📅 현재 등록된 플랜 목록:**\n", color=discord.Color.green())
         for title, info in plans.items():
-            date = info["date"]
             members = ", ".join([f"<@{uid}>" for uid in info["members"]])
-            msg += f"\n**{title}** ({date})\n예약자: {members or '없음'}\n"
+            embed.add_field(name=f"{title}", value=
+            f"{members or '없음'} \n"
+            f"",
+                            inline=False)
 
-        await interaction.response.send_message(msg)
+            embed.set_footer(text="Victoria3 KR Server")
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(ScheduleShowSlash(bot))
