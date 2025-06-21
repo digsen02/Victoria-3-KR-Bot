@@ -8,6 +8,10 @@
       "start_time": "2025-05-15T18:00:00Z",
       "ruleset": "standard",
       "min_players": 4,
+      "members": [
+        "789QWE",
+        "ASD2313"
+      ],
       "current_players": 3,
       "occupied_nations": [
         "France",
@@ -15,22 +19,17 @@
       ]
     }
   ],
-  "2025-06-20_04:02": {
-    "date": "2025-06-20 04:02",
-    "alert_time": "2025-06-20 03:32",
+  "2025-06-23_05:26": {
+    "unique_key": "1217815152506834974_721290589340958761_2025-06-23 05:26",
+    "guild_id": "1217815152506834974",
+    "host_id": "721290589340958761",
+    "start_time": "2025-06-23 04:56",
+    "ruleset": 1,
+    "min_players": 2,
     "members": [
       "721290589340958761"
     ],
-    "ruleset": 1,
-    "min_players": 3
-  },
-  "2025-06-23_05:25": {
-    "date": "2025-06-23 05:25",
-    "alert_time": "2025-06-23 04:55",
-    "members": [
-      "721290589340958761"
-    ],
-    "ruleset": 1,
-    "min_players": 2
+    "current_players": 0,
+    "occupied_nations": []
   }
 }

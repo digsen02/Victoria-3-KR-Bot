@@ -38,8 +38,6 @@ class ScheduleMadeSlash(commands.Cog):
         month: Optional[int] = datetime.datetime.today().month,
         min_players: Optional[int] = 2
     ):
-        print(interaction.user.id)
-
         try:
             validate_year(year)
             validate_month(month)
@@ -49,17 +47,15 @@ class ScheduleMadeSlash(commands.Cog):
         except ValueError as e:
             await interaction.response.send_message(f"입력 오류: {str(e)}", ephemeral=True)
             return
-        print(interaction.user.id)
 
         date = datetime.datetime(year, month, day, hour, minute)
         title = f"{year}-{month:02}-{day:02}_{hour:02}:{minute:02}"
         alert_time = (date - datetime.timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M")
 
         plans = load_file("database", "multi.json")
-        print(interaction.user.id)
 
         #++
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
         if alert_time < now:
             alert_time = date.strftime("%Y-%m-%d %H:%M")
         #
@@ -69,22 +65,33 @@ class ScheduleMadeSlash(commands.Cog):
             return
 
         plans[title] = {
-            "date": date.strftime("%Y-%m-%d %H:%M"),
-            "alert_time": alert_time,
-            "members": [str(interaction.user.id)],
+            "unique_key": f"{str(interaction.guild.id)}_{interaction.user.id}_{date.strftime("%Y-%m-%d_%H:%M")}",
+            "guild_id": str(interaction.guild.id),
+            "host_id": str(interaction.user.id),
+            "start_time": date.strftime("%Y-%m-%d_%H:%M"),
             "ruleset": ruleset,
-            "min_players": min_players
+            "min_players": min_players,
+            "members": [str(interaction.user.id)],
+            "current_players": 0,
+            "occupied_nations": []
         }
-        print(interaction.user.id)
 
         save_file("database", "multi.json", plans)
-        print(interaction.user.id)
 
-        await interaction.response.send_message(
-            f"✅ 예약일시: {year}-{month}-{day} {hour}:{minute}\n"
-            f"📜 룰셋: {ruleset} / 👥 최소 인원: {min_players}\n"
-            f"{interaction.user.mention}님이 예약자로 등록되었습니다!"
+
+        #임베드 추가함.
+
+        embed = discord.Embed(
+            title="📅 멀티 일정 생성 완료!",
+            description=f"{interaction.user.mention}님이 예약자로 등록되었습니다!",
+            color=discord.Color.green()
         )
+        embed.add_field(name="✅ 예약일시", value=f"{year}-{month:02}-{day:02} {hour:02}:{minute:02}", inline=False)
+        embed.add_field(name="📜 룰셋", value=str(ruleset), inline=True)
+        embed.add_field(name="👥 최소 인원", value=str(min_players), inline=True)
+        embed.set_footer(text="Victoria3 KR Server")
+
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):
