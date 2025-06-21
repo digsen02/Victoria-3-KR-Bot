@@ -14,9 +14,10 @@ async def on_ready():
 
 async def load_cogs():
     for forder_name in os.listdir("cogs"):
-        for file_name in os.listdir(f"cogs/{forder_name}"):
-            if file_name.endswith(".py") and not file_name.startswith("_"):
-                await bot.load_extension(f"cogs.{forder_name}.{file_name[:-3]}")
+        if not forder_name.startswith("_"):
+            for file_name in os.listdir(f"cogs/{forder_name}"):
+                if file_name.endswith(".py") and not file_name.startswith("_"):
+                    await bot.load_extension(f"cogs.{forder_name}.{file_name[:-3]}")
 
 
 async def main():

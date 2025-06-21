@@ -8,3 +8,5 @@ class GreetingSlash(commands.Cog):
     async def greeting(self, interaction):
         await interaction.response.send_message("안녕하세요!")
 
+async def setup(bot):
+    await bot.add_cog(GreetingSlash(bot))

@@ -4,7 +4,7 @@ import datetime
 import json
 import os
 
-PLAN_FILE = os.path.join("database", "multis.json")
+PLAN_FILE = os.path.join("database", "multi.json")
 
 class NotifierTask(commands.Cog):
     def __init__(self, bot):
