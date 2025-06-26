@@ -1,10 +1,10 @@
 import discord
-from discord.ext import tasks, commands
+from discord.ext import commands
 import datetime
-import json
 import os
 import asyncio
-from utils.FindNearest import find_nearest
+from utils.DateJudg import *
+from utils.FindNearest import *
 
 
 PLAN_FILE = os.path.join("database", "multi.json")
@@ -13,7 +13,8 @@ class NotifierTask(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    async def notify(plans, interaction: discord.Interaction):
+    async def notify(self, interaction: discord.Interaction):
+        plans = load_file("database", "multi.json")
         nearest_title, nearest_date = find_nearest(plans)
 
         alert_time = nearest_date - datetime.timedelta(minutes=30)
