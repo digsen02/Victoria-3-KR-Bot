@@ -35,7 +35,7 @@ class NotifierTask(commands.Cog):
         #print("sleep.." + str(wait_seconds))
         await asyncio.sleep(wait_seconds)
 
-        mentions = " ".join([f"<@{uid}>" for uid in plans[nearest_title]["members"]])
+        mentions = " ".join([f"<@{uid}>" for uid in plans[nearest_title]["players"]])
         embed = discord.Embed(title=f"📢 알림! `{nearest_title}` 일정이 곧 시작합니다!", description=mentions)
         await interaction.channel.send(embed=embed)
 
