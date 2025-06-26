@@ -6,6 +6,8 @@ import os
 import json
 from utils.DateJudg import *
 from utils.dataFileManager import *
+from Management.notifierTask import NotifierTask
+import asyncio
 
 
 PLAN_FILE = os.path.join("database", "multi.json")
@@ -69,6 +71,8 @@ class ScheduleMadeSlash(commands.Cog):
         }
 
         save_file("database", "multi.json", plans)
+        notifier = NotifierTask(self.bot)
+        asyncio.create_task(notifier.notify())
 
         embed = discord.Embed(
             title="📅 멀티 일정 생성 완료!",

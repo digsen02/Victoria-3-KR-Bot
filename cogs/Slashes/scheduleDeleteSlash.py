@@ -6,7 +6,8 @@ import os
 import json
 from utils.DateJudg import *
 from utils.dataFileManager import *
-
+from Management.notifierTask import NotifierTask
+import asyncio
 
 class ScheduleDeleteSlashes(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -23,6 +24,9 @@ class ScheduleDeleteSlashes(commands.Cog):
 
         del plans[title]
         save_file("database", "multi.json", plans)
+        notifier = NotifierTask(self.bot)
+        asyncio.create_task(notifier.notify())
+        
 
         await interaction.response.send_message(f"'{title}' 플랜이 삭제되었습니다.")
 

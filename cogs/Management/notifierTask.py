@@ -3,43 +3,30 @@ from discord.ext import tasks, commands
 import datetime
 import json
 import os
+import asyncio
+from utils.FindNearest import find_nearest
+
 
 PLAN_FILE = os.path.join("database", "multi.json")
 
 class NotifierTask(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.last_checked_minute = None
-        self.task = self.bot.loop.create_task(self.wait_until_9am())
 
+    async def notify(plans):
+        nearest_title, nearest_date = find_nearest(plans)
 
-    async def notify_check(self):
+        alert_time = nearest_date - datetime.timedelta(minutes=30)
         now = datetime.datetime.now()
-        current_min = now.strftime("%Y-%m-%d_%H:%M")
-        print(f"테스트 {self.min_check()}")
-        with open(PLAN_FILE, "r") as f:
-            plans = json.load(f)
-        while True:
-            pass
 
+        if now > alert_time:
+            print(f"⛔ {nearest_title} 일정의 알림 시간({alert_time})은 이미 지났습니다.")
+            return
 
-    async def before_check(self):
-        await self.bot.wait_until_ready()
+        wait_seconds = (alert_time - now).total_seconds()
 
-    @staticmethod
-    def min_check():
-        with open(PLAN_FILE, "r") as f:
-            plans = json.load(f)
-        min_time = None
-        for title, data in plans.items():
-            if min_time is None:
-                min_time = data["date"]
-            else:
-                if data["date"] < min_time:
-                    min_time = data["date"]
-        return min_time
+        await asyncio.sleep(wait_seconds)
 
-
-
-async def setup(bot):
-    await bot.add_cog(NotifierTask(bot))
+        mentions = " ".join([f"<@{uid}>" for uid in plans[nearest_title]["members"]])
+        print(f"📢 알림! `{nearest_title}` 일정이 곧 시작합니다!")
+        print(f"멘션 대상: {mentions}")
