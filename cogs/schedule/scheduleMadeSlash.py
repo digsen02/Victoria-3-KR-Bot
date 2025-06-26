@@ -6,7 +6,7 @@ import os
 import json
 from utils.DateJudg import *
 from utils.dataFileManager import *
-from Management.notifierTask import NotifierTask
+from notifierTask import NotifierTask
 import asyncio
 
 

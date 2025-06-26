@@ -20,7 +20,7 @@ class NotifierTask(commands.Cog):
         now = datetime.datetime.now()
 
         if now > alert_time:
-            print(f"⛔ {nearest_title} 일정의 알림 시간({alert_time})은 이미 지났습니다.")
+            print(f"⛔ {nearest_title}  일정의 알림시간({alert_time})은 이미 지났습니다.")
             return
 
         wait_seconds = (alert_time - now).total_seconds()
