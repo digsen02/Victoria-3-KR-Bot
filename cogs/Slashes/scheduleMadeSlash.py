@@ -48,13 +48,8 @@ class ScheduleMadeSlash(commands.Cog):
 
         date = datetime.datetime(year, month, day, hour, minute)
         title = f"{year}-{month:02}-{day:02}_{hour:02}:{minute:02}"
-        alert_time = (date - datetime.timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M")
 
         plans = load_file("database", "multi.json")
-
-        now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
-        if alert_time < now:
-            alert_time = date.strftime("%Y-%m-%d %H:%M")
 
         if title in plans:
             await interaction.response.send_message("이미 해당 시간의 플랜이 존재합니다.", ephemeral=True)
@@ -65,7 +60,6 @@ class ScheduleMadeSlash(commands.Cog):
             "guild_id": str(interaction.guild.id),
             "host_id": str(interaction.user.id),
             "start_date": date.strftime("%Y-%m-%d_%H:%M"),
-            "alert_time" : alert_time,
             "ruleset": ruleset,
             "min_players": min_players,
             "members": [str(interaction.user.id)],
