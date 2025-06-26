@@ -30,6 +30,7 @@ class ScheduleMadeSlash(commands.Cog):
     async def make_schedule(
         self,
         interaction: discord.Interaction,
+        plan_name: str,
         ruleset: int,
         day: int,
         hour: int,
@@ -49,7 +50,7 @@ class ScheduleMadeSlash(commands.Cog):
             return
 
         date = datetime.datetime(year, month, day, hour, minute)
-        title = f"{year}-{month:02}-{day:02}_{hour:02}:{minute:02}"
+        title = f"{plan_name}"
         alert_time = (date - datetime.timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M")
 
         plans = load_file("database", "multi.json")
@@ -86,6 +87,7 @@ class ScheduleMadeSlash(commands.Cog):
             description=f"{interaction.user.mention}님이 예약자로 등록되었습니다!",
             color=discord.Color.green()
         )
+        embed.add_field(name="플랜 제목", value=f"{plan_name}", inline=False)
         embed.add_field(name="✅ 예약일시", value=f"{year}-{month:02}-{day:02} {hour:02}:{minute:02}", inline=False)
         embed.add_field(name="📜 룰셋", value=str(ruleset), inline=True)
         embed.add_field(name="👥 최소 인원", value=str(min_players), inline=True)
