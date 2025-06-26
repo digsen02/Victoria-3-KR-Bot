@@ -22,11 +22,14 @@ class ScheduleReserveSlash(commands.Cog):
             return
 
         user_id = str(interaction.user.id)
-        if user_id in plans[title]["members"]:
+        if user_id in plans[title]["players"]:
             await interaction.response.send_message("이미 예약하셨습니다.", ephemeral=True)
             return
 
-        plans[title]["members"].append(user_id)
+        plans[title]["current_players"] += 1
+
+        plans[title]["players"].append(user_id)
+        plans[title]["player_info"].append(f"{user_id}_{interaction.user.global_name}_None")
         save_file("database", "multi.json", plans)
 
         await interaction.response.send_message(f"{interaction.user.mention}님이 '{title}' 플랜에 예약되었습니다!")

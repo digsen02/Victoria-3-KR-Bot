@@ -49,38 +49,40 @@ class ScheduleMadeSlash(commands.Cog):
             await interaction.response.send_message(f"입력 오류: {str(e)}", ephemeral=True)
             return
 
-        date = datetime.datetime(year, month, day, hour, minute)
+        start_date = datetime.datetime(year, month, day, hour, minute)
         title = f"{plan_name}"
-        alert_time = (date - datetime.timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M")
 
         plans = load_file("database", "multi.json")
 
-        #++
-        now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
-        if alert_time < now:
-            alert_time = date.strftime("%Y-%m-%d %H:%M")
-        #
-
         if title in plans:
-            await interaction.response.send_message("이미 해당 시간의 플랜이 존재합니다.", ephemeral=True)
+            await interaction.response.send_message("이미 해당 이름의 플랜이 존재합니다.", ephemeral=True)
             return
 
+        if start_date in plans:
+            await interaction.response.send_message("이미 해당 시간대에 플랜이 존재합니다.", ephemeral=True)
+            return
+
+        host_id = str(interaction.user.id)
+        host_name = str(interaction.user.global_name)
         plans[title] = {
-            "unique_key": f"{str(interaction.guild.id)}_{interaction.user.id}_{date.strftime("%Y-%m-%d_%H:%M")}",
+            "unique_key": f"{str(interaction.guild.id)}_{host_id}_{start_date.strftime("%Y-%m-%d_%H:%M")}",
             "guild_id": str(interaction.guild.id),
-            "host_id": str(interaction.user.id),
-            "start_date": date.strftime("%Y-%m-%d_%H:%M"),
+            "host_id": host_id,
+            "start_date": start_date.strftime("%Y-%m-%d_%H:%M"),
             "ruleset": ruleset,
             "min_players": min_players,
-            "members": [str(interaction.user.id)],
-            "current_players": 0,
-            "occupied_nations": []
+            "players": [
+                host_id,
+            ],
+            "current_players": 1,
+            "occupied_nations": [
+            ],
+            "player_info": [
+                f"{host_id}_{host_name}_None"
+            ]
         }
 
         save_file("database", "multi.json", plans)
-
-
-        #임베드 추가함.
 
         embed = discord.Embed(
             title="📅 멀티 일정 생성 완료!",

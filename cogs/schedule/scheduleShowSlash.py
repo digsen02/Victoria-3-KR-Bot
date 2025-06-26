@@ -20,7 +20,7 @@ class ScheduleShowSlash(commands.Cog):
             return
         embed = Embed(title="**📅 현재 등록된 플랜 목록:**\n", color=discord.Color.green())
         for title, info in plans.items():
-            members = ", ".join([f"<@{uid}>" for uid in info["members"]])
+            members = ", ".join([f"<@{uid}>" for uid in info["players"]])
             embed.add_field(name=f"{title}", value=
             f"{members or '없음'} \n"
             f"",
