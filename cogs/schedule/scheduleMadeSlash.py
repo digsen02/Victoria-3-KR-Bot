@@ -30,10 +30,11 @@ class ScheduleMadeSlash(commands.Cog):
     async def make_schedule(
         self,
         interaction: discord.Interaction,
+        plan_name: str,
+        ruleset: int,
         day: int,
         hour: int,
         minute: int,
-        ruleset: Optional[int] = 1,
         year: Optional[int] = datetime.datetime.today().year,
         month: Optional[int] = datetime.datetime.today().month,
         min_players: Optional[int] = 2
@@ -48,26 +49,37 @@ class ScheduleMadeSlash(commands.Cog):
             await interaction.response.send_message(f"입력 오류: {str(e)}", ephemeral=True)
             return
 
-        date = datetime.datetime(year, month, day, hour, minute)
-        title = f"{year}-{month:02}-{day:02}_{hour:02}:{minute:02}"
+        start_date = datetime.datetime(year, month, day, hour, minute)
+        title = f"{plan_name}"
 
         plans = load_file("database", "multi.json")
 
         if title in plans:
-            await interaction.response.send_message("이미 해당 시간의 플랜이 존재합니다.", ephemeral=True)
+            await interaction.response.send_message("이미 해당 이름의 플랜이 존재합니다.", ephemeral=True)
             return
 
+        if start_date in plans:
+            await interaction.response.send_message("이미 해당 시간대에 플랜이 존재합니다.", ephemeral=True)
+            return
+
+        host_id = str(interaction.user.id)
+        host_name = str(interaction.user.global_name)
         plans[title] = {
-            "unique_key": f"{str(interaction.guild.id)}_{interaction.user.id}_{date.strftime("%Y-%m-%d_%H:%M")}",
+            "unique_key": f"{str(interaction.guild.id)}_{host_id}_{start_date.strftime("%Y-%m-%d_%H:%M")}",
             "guild_id": str(interaction.guild.id),
-            "host_id": str(interaction.user.id),
-            "start_date": date.strftime("%Y-%m-%d_%H:%M"),
+            "host_id": host_id,
+            "start_date": start_date.strftime("%Y-%m-%d_%H:%M"),
             "ruleset": ruleset,
             "min_players": min_players,
-            "members": [str(interaction.user.id)],
+            "players": [
+                host_id,
+            ],
             "current_players": 1,
-            "occupied_nations": [],
-            "player_info" : []
+            "occupied_nations": [
+            ],
+            "player_info": [
+                f"{host_id}_{host_name}_None"
+            ]
         }
 
         save_file("database", "multi.json", plans)
@@ -79,6 +91,7 @@ class ScheduleMadeSlash(commands.Cog):
             description=f"{interaction.user.mention}님이 예약자로 등록되었습니다!",
             color=discord.Color.green()
         )
+        embed.add_field(name="플랜 제목", value=f"{plan_name}", inline=False)
         embed.add_field(name="✅ 예약일시", value=f"{year}-{month:02}-{day:02} {hour:02}:{minute:02}", inline=False)
         embed.add_field(name="📜 룰셋", value=str(ruleset), inline=True)
         embed.add_field(name="👥 최소 인원", value=str(min_players), inline=True)

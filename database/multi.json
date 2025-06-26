@@ -6,10 +6,27 @@
     "start_date": "2025-06-02_03:02",
     "ruleset": 3,
     "min_players": 2,
-    "members": [
+    "players": [
       "721290589340958761"
     ],
     "current_players": 0,
-    "occupied_nations": []
+    "occupied_nations": [],
+    "player_info": []
+  },
+  "테스트": {
+    "unique_key": "1217815152506834974_721290589340958761_2025-06-01_01:03",
+    "guild_id": "1217815152506834974",
+    "host_id": "721290589340958761",
+    "start_date": "2025-06-01_01:03",
+    "ruleset": 3,
+    "min_players": 2,
+    "players": [
+      "721290589340958761"
+    ],
+    "current_players": 1,
+    "occupied_nations": [],
+    "player_info": [
+      "721290589340958761_DIGSEN_None"
+    ]
   }
 }
