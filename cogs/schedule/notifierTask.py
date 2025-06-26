@@ -10,17 +10,18 @@ from utils.FindNearest import find_nearest
 PLAN_FILE = os.path.join("database", "multi.json")
 
 class NotifierTask(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    async def notify(plans):
+    async def notify(plans, interaction: discord.Interaction):
         nearest_title, nearest_date = find_nearest(plans)
 
         alert_time = nearest_date - datetime.timedelta(minutes=30)
         now = datetime.datetime.now()
 
         if now > alert_time:
-            print(f"⛔ {nearest_title}  일정의 알림시간({alert_time})은 이미 지났습니다.")
+            embed = discord.Embed(title="일정의 알림시간은 이미 지났습니다.")
+            await interaction.response.send_message(embed=embed)
             return
 
         wait_seconds = (alert_time - now).total_seconds()
@@ -28,5 +29,6 @@ class NotifierTask(commands.Cog):
         await asyncio.sleep(wait_seconds)
 
         mentions = " ".join([f"<@{uid}>" for uid in plans[nearest_title]["members"]])
-        print(f"📢 알림! `{nearest_title}` 일정이 곧 시작합니다!")
-        print(f"멘션 대상: {mentions}")
+        embed = discord.Embed(
+        title=f"📢 알림! `{nearest_title}` 일정이 곧 시작합니다!", description=mentions)
+        await interaction.channel.send(embed=embed)
