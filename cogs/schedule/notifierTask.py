@@ -21,6 +21,9 @@ class NotifierTask(commands.Cog):
         alert_time = nearest_date - datetime.timedelta(minutes=30)
         now = datetime.datetime.now()
 
+        if not plans:
+            return
+
         print(str(nearest_date))
 
         if now > alert_time:
