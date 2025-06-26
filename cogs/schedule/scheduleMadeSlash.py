@@ -3,11 +3,9 @@ from discord.ext import commands
 from discord import app_commands
 from typing import Optional
 import os
-import json
 from utils.DateJudg import *
 from utils.dataFileManager import *
-from notifierTask import NotifierTask
-import asyncio
+import datetime
 
 
 PLAN_FILE = os.path.join("database", "multi.json")
@@ -49,42 +47,40 @@ class ScheduleMadeSlash(commands.Cog):
             await interaction.response.send_message(f"입력 오류: {str(e)}", ephemeral=True)
             return
 
-        start_date = datetime.datetime(year, month, day, hour, minute)
+        start_date = datetime.datetime(year, month, day, hour, minute).strftime("%Y-%m-%d_%H:%M")
         title = f"{plan_name}"
 
         plans = load_file("database", "multi.json")
+        if plans is None:
+            plans = {}
 
         if title in plans:
             await interaction.response.send_message("이미 해당 이름의 플랜이 존재합니다.", ephemeral=True)
             return
 
-        if start_date in plans:
-            await interaction.response.send_message("이미 해당 시간대에 플랜이 존재합니다.", ephemeral=True)
-            return
+        for plan_name, plan_data in plans.items():
+            if plan_data.get("start_date") == start_date:
+                await interaction.response.send_message("이미 해당 시간대에 플랜이 존재합니다.", ephemeral=True)
+                return
 
         host_id = str(interaction.user.id)
-        host_name = str(interaction.user.global_name)
+
         plans[title] = {
-            "unique_key": f"{str(interaction.guild.id)}_{host_id}_{start_date.strftime("%Y-%m-%d_%H:%M")}",
+            "unique_key": f"{str(interaction.guild.id)}_{host_id}_{start_date}",
             "guild_id": str(interaction.guild.id),
             "host_id": host_id,
-            "start_date": start_date.strftime("%Y-%m-%d_%H:%M"),
+            "start_date": start_date,
             "ruleset": ruleset,
             "min_players": min_players,
             "players": [
                 host_id,
             ],
             "current_players": 1,
-            "occupied_nations": [
-            ],
-            "player_info": [
-                f"{host_id}_{host_name}_None"
-            ]
+            "occupied_nations": [],
+            "player_info": []
         }
 
         save_file("database", "multi.json", plans)
-        notifier = NotifierTask(self.bot)
-        asyncio.create_task(notifier.notify())
 
         embed = discord.Embed(
             title="📅 멀티 일정 생성 완료!",
@@ -98,6 +94,12 @@ class ScheduleMadeSlash(commands.Cog):
         embed.set_footer(text="Victoria3 KR Server")
 
         await interaction.response.send_message(embed=embed)
+
+        notifier = self.bot.get_cog("NotifierTask")
+        if notifier:
+            self.bot.loop.create_task(notifier.notify(interaction))
+        else:
+            await interaction.followup.send("NotifierTask가 없습니다.", ephemeral=True)
 
 
 async def setup(bot):
