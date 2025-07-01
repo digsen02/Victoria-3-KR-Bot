@@ -14,21 +14,6 @@
     "occupied_nations": [],
     "player_info": []
   },
-  "test3": {
-    "unique_key": "1326856987132297216_718651177251766283_2025-07-03_18:00",
-    "guild_id": "1326856987132297216",
-    "channel_id": "1387865007932313672",
-    "host_id": "718651177251766283",
-    "start_date": "2025-07-03_18:00",
-    "ruleset": 1,
-    "min_players": 2,
-    "players": [
-      "718651177251766283"
-    ],
-    "current_players": 1,
-    "occupied_nations": [],
-    "player_info": []
-  },
   "test": {
     "unique_key": "1326856987132297216_718651177251766283_2025-07-03_16:00",
     "guild_id": "1326856987132297216",
@@ -42,6 +27,8 @@
     ],
     "current_players": 1,
     "occupied_nations": [],
-    "player_info": []
+    "player_info": [
+      "718651177251766283_현무_prussia"
+    ]
   }
 }

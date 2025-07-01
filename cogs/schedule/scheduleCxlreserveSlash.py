@@ -7,7 +7,7 @@ from utils.dataFileManager import *
 class ScheduleCxlreserveSlashes(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        print("작동")
+        #print("작동")
 
     @app_commands.command(name="cxl", description="예약을 취소합니다.")
     @app_commands.describe(title="예약 취소할 플랜 제목")
