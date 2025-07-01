@@ -29,7 +29,6 @@ class ScheduleReserveSlash(commands.Cog):
         plans[title]["current_players"] += 1
 
         plans[title]["players"].append(user_id)
-        plans[title]["player_info"].append(f"{user_id}_{interaction.user.global_name}_None")
         save_file("database", "multi.json", plans)
 
         await interaction.response.send_message(f"{interaction.user.mention}님이 '{title}' 플랜에 예약되었습니다!")

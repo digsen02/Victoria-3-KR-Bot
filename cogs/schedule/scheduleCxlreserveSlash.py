@@ -25,7 +25,16 @@ class ScheduleCxlreserveSlashes(commands.Cog):
         if user_id == plans[title]["host_id"]:
             await interaction.response.send_message("호스트는 예약을 취소할 수 없습니다.", ephemeral=True)
         
-        del plans[title]["players"][user_id]
+        user_info = None
+        for entry in plans[title]["player_info"]:
+            if entry.startswith(f"{user_id}_"):
+                user_info = entry
+                plans[title]["player_info"].remove(entry)
+                break
+
+        plans[title]["current_players"] -= 1
+
+        plans[title]["players"].remove(user_id)
         save_file("database", "multi.json", plans)
 
         await interaction.response.send_message(f"'{title}' 에서 예약이 취소되었습니다.")
