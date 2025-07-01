@@ -73,7 +73,7 @@ class ScheduleMadeSlash(commands.Cog):
         nearest_title, nearest_date = find_nearest(plans)
         if nearest_date and start_dt < nearest_date:
             if plans[nearest_title]["player_info"]:
-                await interaction.response.send_message("더 가까운 시일에 국가가 예약된 파일이 있습니다.", ephemeral=True)
+                await interaction.response.send_message("국가가 예약된 파일보다 가까운 날짜에 플랜을 생성할 수 없습니다.", ephemeral=True)
                 return
 
         for plan_name, plan_data in plans.items():
