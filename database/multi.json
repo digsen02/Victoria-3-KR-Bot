@@ -8,14 +8,11 @@
     "ruleset": 1,
     "min_players": 2,
     "players": [
-      "718651177251766283"
+      "718651177251766283",
+      "1376107469197021287"
     ],
-    "current_players": 1,
-    "occupied_nations": [
-      "prussia"
-    ],
-    "player_info": [
-      "718651177251766283_현무_prussia"
-    ]
+    "current_players": 2,
+    "occupied_nations": [],
+    "player_info": []
   }
 }

@@ -26,20 +26,21 @@ class ScheduleCxlreserveSlashes(commands.Cog):
         if user_id == plans[title]["host_id"]:
             await interaction.response.send_message("호스트는 예약을 취소할 수 없습니다.", ephemeral=True)
             return
-        
-        for entry in plans[title]["player_info"]:
-            if entry.startswith(f"{user_id}_"):
-                plans[title]["player_info"].remove(entry)
-                user_id, user_name, country= entry.split("_", 2)
-                plans[title]["occupied_nations"].remove(country)
-                member = interaction.guild.get_member(int(user_id))
-                if member:
-                    if member.guild_permissions.administrator:
-                        await interaction.response.send_message(f"🔒 `{user_name}` (ID: {user_id}) 은 관리자여서 닉네임 변경이 불가능합니다.")
-                        break
+
+        entry = next((e for e in plans[title]["player_info"] if e.startswith(f"{user_id}_")), None)
+
+        if entry:
+            plans[title]["player_info"].remove(entry)
+            user_id, user_name, country = entry.split("_", 2)
+            plans[title]["occupied_nations"].remove(country)
+
+            member = interaction.guild.get_member(int(user_id))
+            if member:
+                if member.guild_permissions.administrator:
+                    await interaction.response.send_message(f"🔒 `{user_name}` (ID: {user_id}) 은 관리자여서 닉네임 변경이 불가능합니다.", ephemeral=True)
+                else:
                     await member.edit(nick=user_name)
-                    await interaction.response.send_message(f"✅ `{user_name}` 닉네임 변경 완료", ephemeral=True)
-                break
+                    await interaction.response.send_message(f"✅ `{user_name}` 닉네임 변경 완료",ephemeral=True)
 
         plans[title]["current_players"] -= 1
 

@@ -56,22 +56,15 @@ class ScheduleRegistrationSlashes(commands.Cog):
         plans[nearest_title]["occupied_nations"].append(str(english_name))
         save_file("database", "multi.json", plans)
 
-        await interaction.response.send_message(
-            f"✅ {interaction.user.mention}님이 `{nearest_title}` 플랜에 `{country}` 국가로 예약되었습니다!"
-        )
+        await interaction.response.send_message(f"✅ {interaction.user.mention}님이 `{nearest_title}` 플랜에 `{country}` 국가로 예약되었습니다!")
 
         if member.guild_permissions.administrator:
-            await interaction.followup.send(
-                "⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!", ephemeral=True
-            )
+            await interaction.followup.send("⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!", ephemeral=True)
             return
-
         try:
             await member.edit(nick=country)
         except discord.Forbidden:
-            await interaction.followup.send(
-                "❌ 닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.", ephemeral=True
-            )
+            await interaction.followup.send("닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(ScheduleRegistrationSlashes(bot))
