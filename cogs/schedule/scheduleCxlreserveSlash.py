@@ -21,9 +21,11 @@ class ScheduleCxlreserveSlashes(commands.Cog):
         
         if user_id not in plans[title]["players"]:
             await interaction.response.send_message("플레이어가 해당 플랜에 가입되지 않았습니다.", ephemeral = True)
+            return
 
         if user_id == plans[title]["host_id"]:
             await interaction.response.send_message("호스트는 예약을 취소할 수 없습니다.", ephemeral=True)
+            return
         
         for entry in plans[title]["player_info"]:
             if entry.startswith(f"{user_id}_"):
