@@ -5,6 +5,7 @@ from typing import Optional
 import os
 from utils.DateJudg import *
 from utils.dataFileManager import *
+from utils.FindNearest import *
 import datetime
 
 PLAN_FILE = os.path.join("database", "multi.json")
@@ -52,6 +53,7 @@ class ScheduleMadeSlash(commands.Cog):
 
         start_date = datetime.datetime(year, month, day, hour, minute).strftime("%Y-%m-%d_%H:%M")
         title = f"{plan_name}"
+        
 
         plans = load_file("database", "multi.json")
         if plans is None:
@@ -66,6 +68,13 @@ class ScheduleMadeSlash(commands.Cog):
             #print(f"[경고] 플랜명 '{title}' 이미 존재함. 함수 종료")
             await interaction.response.send_message("이미 해당 이름의 플랜이 존재합니다.", ephemeral=True)
             return
+        
+        start_dt = datetime.datetime(year, month, day, hour, minute)
+        nearest_title, nearest_date = find_nearest(plans)
+        if nearest_date and start_dt < nearest_date:
+            if plans[nearest_title]["player_info"]:
+                await interaction.response.send_message("더 가까운 시일에 국가가 예약된 파일이 있습니다.", ephemeral=True)
+                return
 
         for plan_name, plan_data in plans.items():
             if plan_data.get("start_date") == start_date:

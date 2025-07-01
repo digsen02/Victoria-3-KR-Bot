@@ -16,6 +16,24 @@ class ScheduleDeleteSlashes(commands.Cog):
         if title not in plans:
             await interaction.response.send_message("해당 제목의 플랜이 없습니다.", ephemeral=True)
             return
+        
+        if plans[title]["player_info"]:
+            for title, plan in plans.items():
+                player_info_list = plan.get("player_info", [])
+                for entry in player_info_list:
+                    try:
+                        user_id, user_name, _ = entry.split("_", 2)
+                        member = interaction.guild.get_member(int(user_id))
+                        if member:
+                            if member.guild_permissions.administrator:
+                                await interaction.response.send_message(f"🔒 `{user_name}` (ID: {user_id}) 은 관리자여서 닉네임 변경이 불가능합니다.")
+                                continue
+                            await member.edit(nick=user_name)
+                            await interaction.response.send_message(f"✅ `{user_name}` (ID: {user_id}) 닉네임 변경 완료")
+                        else:
+                            await interaction.response.send_message(f"⚠️ ID `{user_id}` 에 해당하는 멤버를 찾을 수 없습니다.")
+                    except Exception as e:
+                        await interaction.response.send_message(f"❌ `{entry}` 처리 중 오류 발생: {e}")
 
         del plans[title]
         save_file("database", "multi.json", plans)

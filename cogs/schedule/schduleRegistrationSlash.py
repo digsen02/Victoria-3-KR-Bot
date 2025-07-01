@@ -8,7 +8,7 @@ from utils.FindNearest import *
 class ScheduleRegistrationSlashes(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        print("작동")
+        #print("작동")
 
     def find_english_name(self, data, korean_name: str) -> str:
         for category in data:

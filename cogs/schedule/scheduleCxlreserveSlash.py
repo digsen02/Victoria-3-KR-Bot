@@ -25,10 +25,8 @@ class ScheduleCxlreserveSlashes(commands.Cog):
         if user_id == plans[title]["host_id"]:
             await interaction.response.send_message("호스트는 예약을 취소할 수 없습니다.", ephemeral=True)
         
-        user_info = None
         for entry in plans[title]["player_info"]:
             if entry.startswith(f"{user_id}_"):
-                user_info = entry
                 plans[title]["player_info"].remove(entry)
                 break
 
