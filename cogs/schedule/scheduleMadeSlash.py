@@ -7,12 +7,15 @@ from utils.DateJudg import *
 from utils.dataFileManager import *
 import datetime
 
-
 PLAN_FILE = os.path.join("database", "multi.json")
 
 class ScheduleMadeSlash(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        plans = load_file("database", "multi.json")
+        if not isinstance(plans, dict):
+            plans = {}
+            save_file("database", "multi.json", plans)
 
     @app_commands.command(name="make_schedule", description="멀티 플랜을 생성합니다.")
     @app_commands.describe(
@@ -54,7 +57,13 @@ class ScheduleMadeSlash(commands.Cog):
         if plans is None:
             plans = {}
 
+        if not isinstance(plans, dict):
+            plans = {}
+
+        #print(f"plans: {plans}, type: {type(plans)}")
+
         if title in plans:
+            #print(f"[경고] 플랜명 '{title}' 이미 존재함. 함수 종료")
             await interaction.response.send_message("이미 해당 이름의 플랜이 존재합니다.", ephemeral=True)
             return
 
@@ -68,6 +77,7 @@ class ScheduleMadeSlash(commands.Cog):
         plans[title] = {
             "unique_key": f"{str(interaction.guild.id)}_{host_id}_{start_date}",
             "guild_id": str(interaction.guild.id),
+            "channel_id" : str(interaction.channel.id),
             "host_id": host_id,
             "start_date": start_date,
             "ruleset": ruleset,
@@ -80,7 +90,14 @@ class ScheduleMadeSlash(commands.Cog):
             "player_info": []
         }
 
+        #print(f"[저장] '{title}' 플랜 저장 시작")
         save_file("database", "multi.json", plans)
+        #print(f"[저장 완료] '{title}' 플랜 저장 완료")
+
+        updated = load_file("database", "multi.json")
+        if title not in updated:
+            await interaction.response.send_message("저장 중 문제가 발생했습니다. 다시 시도해주세요.", ephemeral=True)
+            return
 
         embed = discord.Embed(
             title="📅 멀티 일정 생성 완료!",
@@ -94,13 +111,6 @@ class ScheduleMadeSlash(commands.Cog):
         embed.set_footer(text="Victoria3 KR Server")
 
         await interaction.response.send_message(embed=embed)
-
-        notifier = self.bot.get_cog("NotifierTask")
-        if notifier:
-            self.bot.loop.create_task(notifier.notify(interaction))
-        else:
-            await interaction.followup.send("NotifierTask가 없습니다.", ephemeral=True)
-
 
 async def setup(bot):
     await bot.add_cog(ScheduleMadeSlash(bot))

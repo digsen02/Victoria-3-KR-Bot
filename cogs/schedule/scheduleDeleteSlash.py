@@ -3,8 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 from utils.DateJudg import *
 from utils.dataFileManager import *
-from cogs.schedule.notifierTask import NotifierTask
-import asyncio
 
 class ScheduleDeleteSlashes(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -23,12 +21,6 @@ class ScheduleDeleteSlashes(commands.Cog):
         save_file("database", "multi.json", plans)
 
         await interaction.response.send_message(f"'{title}' 플랜이 삭제되었습니다.")
-        
-        notifier = self.bot.get_cog("NotifierTask")
-        if notifier:
-            self.bot.loop.create_task(notifier.notify(interaction))
-        else:
-            await interaction.followup.send("NotifierTask가 없습니다.", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(ScheduleDeleteSlashes(bot))

@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord import app_commands, Embed
 from utils.dataFileManager import *
 
-
 class ScheduleShowSlash(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
