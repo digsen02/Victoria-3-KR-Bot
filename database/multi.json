@@ -11,7 +11,9 @@
       "718651177251766283"
     ],
     "current_players": 1,
-    "occupied_nations": [],
+    "occupied_nations": [
+      "prussia"
+    ],
     "player_info": [
       "718651177251766283_현무_prussia"
     ]

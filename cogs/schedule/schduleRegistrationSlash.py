@@ -38,9 +38,13 @@ class ScheduleRegistrationSlashes(commands.Cog):
         if english_name is None:
             await interaction.response.send_message("존재하지 않는 국가입니다. 정확히 입력해주세요.", ephemeral=True)
             return
+        
+        if english_name in plans[nearest_title]["occupied_nations"]:
+            await interaction.response.send_message("이미 점유된 국가입니다.", ephemeral=True)
+            return
 
         member = interaction.guild.get_member(interaction.user.id)
-        display_name = member.nick if member and member.nick else member.name
+        display_name = member.display_name if member else interaction.user.name
 
         for info in plans[nearest_title]["player_info"]:
             if info.startswith(f"{user_id}_"):
@@ -49,6 +53,7 @@ class ScheduleRegistrationSlashes(commands.Cog):
 
         player_entry = f"{user_id}_{display_name}_{english_name}"
         plans[nearest_title]["player_info"].append(player_entry)
+        plans[nearest_title]["occupied_nations"].append(str(english_name))
         save_file("database", "multi.json", plans)
 
         await interaction.response.send_message(
