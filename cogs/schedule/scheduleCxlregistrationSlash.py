@@ -35,13 +35,15 @@ class ScheduleCxlregistrationSlashes(commands.Cog):
             member = interaction.guild.get_member(int(user_id))
             if member:
                 if member.guild_permissions.administrator:
-                    await interaction.response.send_message(f"⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!", ephemeral=True)
+                    #await interaction.response.send_message(f"⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!", ephemeral=True)
+                    pass
                 else:
                     try:
                         await member.edit(nick=user_name)
-                        await interaction.response.send_message(f"✅ `{user_name}` 닉네임 변경 완료", ephemeral=True)
+                        #await interaction.response.send_message(f"✅ `{user_name}` 닉네임 변경 완료", ephemeral=True)
                     except discord.Forbidden:
-                        await interaction.response.send_message("닉네임을 변경할 수 있는 권한이 없습니다.", ephemeral=True)
+                        #await interaction.response.send_message("닉네임을 변경할 수 있는 권한이 없습니다.", ephemeral=True)
+                        print("닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.")
 
             save_file("database", "multi.json", plans)
             await interaction.followup.send(f"`{nearest_title}` 에서 국가 예약이 취소되었습니다.")

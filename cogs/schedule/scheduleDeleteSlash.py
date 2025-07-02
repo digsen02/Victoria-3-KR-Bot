@@ -31,12 +31,13 @@ class ScheduleDeleteSlashes(commands.Cog):
                         member = interaction.guild.get_member(int(user_id))
                         if member:
                             if member.guild_permissions.administrator:
-                                await interaction.response.send_message(f"⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!")
+                                #await interaction.response.send_message(f"⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!")
                                 continue
                             await member.edit(nick=user_name)
-                            await interaction.response.send_message(f"✅ `{user_name}` 닉네임 변경 완료")
+                            #await interaction.response.send_message(f"✅ `{user_name}` 닉네임 변경 완료")
                         else:
-                            await interaction.response.send_message(f"⚠️ ID `{user_id}` 에 해당하는 멤버를 찾을 수 없습니다.")
+                            #await interaction.response.send_message(f"⚠️ ID `{user_id}` 에 해당하는 멤버를 찾을 수 없습니다.")
+                            pass
                     except Exception as e:
                         await interaction.response.send_message(f"❌ `{entry}` 처리 중 오류 발생: {e}")
 

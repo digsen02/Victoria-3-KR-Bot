@@ -21,7 +21,7 @@ class ScheduleRegistrationSlashes(commands.Cog):
     @app_commands.command(name="reg", description="국가를 예약합니다.")
     @app_commands.describe(country="예약할 국가 이름")
     async def reg(self, interaction: discord.Interaction, country: str):
-        print("실행")
+        #print("실행")
         plans = load_file("database", "multi.json")
         countries = load_file("database", "country.json")
         user_id = str(interaction.user.id)
@@ -66,12 +66,13 @@ class ScheduleRegistrationSlashes(commands.Cog):
         await interaction.response.send_message(f"✅ {interaction.user.mention}님이 `{nearest_title}` 플랜에 `{country}` 국가로 예약되었습니다!")
 
         if member.guild_permissions.administrator:
-            await interaction.followup.send("⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!", ephemeral=True)
+            #await interaction.followup.send("⚠️ 관리자 유저는 닉네임 변경이 불가하므로 수동으로 바꿔주세요!", ephemeral=True)
             return
         try:
             await member.edit(nick=country)
         except discord.Forbidden:
-            await interaction.followup.send("닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.", ephemeral=True)
+            #await interaction.followup.send("닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.", ephemeral=True)
+            print("닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.")
 
 async def setup(bot):
     await bot.add_cog(ScheduleRegistrationSlashes(bot))
