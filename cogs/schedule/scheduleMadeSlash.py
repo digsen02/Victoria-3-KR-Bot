@@ -113,7 +113,7 @@ class ScheduleMadeSlash(commands.Cog):
             description=f"{interaction.user.mention}님이 예약자로 등록되었습니다!",
             color=discord.Color.green()
         )
-        embed.add_field(name="플랜 제목", value=f"{plan_name}", inline=False)
+        embed.add_field(name="플랜 제목", value=f"{title}", inline=False)
         embed.add_field(name="✅ 예약일시", value=f"{year}-{month:02}-{day:02} {hour:02}:{minute:02}", inline=False)
         embed.add_field(name="📜 룰셋", value=str(ruleset), inline=True)
         embed.add_field(name="👥 최소 인원", value=str(min_players), inline=True)
