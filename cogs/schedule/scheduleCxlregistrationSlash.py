@@ -46,7 +46,7 @@ class ScheduleCxlregistrationSlashes(commands.Cog):
                         print("닉네임 변경 권한이 부족합니다. 봇 권한을 확인해주세요.")
 
             save_file("database", "multi.json", plans)
-            await interaction.followup.send(f"`{nearest_title}` 에서 국가 예약이 취소되었습니다.")
+            await interaction.response.send_message(f"`{nearest_title}` 에서 국가 예약이 취소되었습니다.")
 
 async def setup(bot):
     await bot.add_cog(ScheduleCxlregistrationSlashes(bot))
