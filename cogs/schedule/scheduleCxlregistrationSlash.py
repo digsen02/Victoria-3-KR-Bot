@@ -10,7 +10,7 @@ class ScheduleCxlregistrationSlashes(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="cxl_reg", description="국가 예약을 취소합니다.")
-    async def delete_schedule(self, interaction: discord.Interaction):
+    async def cxl_reg(self, interaction: discord.Interaction):
         plans = load_file("database", "multi.json")
         user_id = str(interaction.user.id)
         nearest_title, nearest_date = find_nearest(plans)
@@ -44,7 +44,7 @@ class ScheduleCxlregistrationSlashes(commands.Cog):
                         await interaction.response.send_message("닉네임을 변경할 수 있는 권한이 없습니다.", ephemeral=True)
 
             save_file("database", "multi.json", plans)
-            await interaction.followup.send(f"'{nearest_title}' 에서 국가 예약이 취소되었습니다.")
+            await interaction.followup.send(f"`{nearest_title}` 에서 국가 예약이 취소되었습니다.")
 
 async def setup(bot):
     await bot.add_cog(ScheduleCxlregistrationSlashes(bot))

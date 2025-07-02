@@ -11,7 +11,7 @@ class ScheduleCxlreserveSlashes(commands.Cog):
 
     @app_commands.command(name="cxl", description="예약을 취소합니다.")
     @app_commands.describe(title="예약 취소할 플랜 제목")
-    async def delete_schedule(self, interaction: discord.Interaction, title: str):
+    async def cxl(self, interaction: discord.Interaction, title: str):
         plans = load_file("database", "multi.json")
         user_id = str(interaction.user.id)
 
@@ -47,7 +47,7 @@ class ScheduleCxlreserveSlashes(commands.Cog):
         plans[title]["players"].remove(user_id)
         save_file("database", "multi.json", plans)
 
-        await interaction.response.send_message(f"'{title}' 에서 예약이 취소되었습니다.")
+        await interaction.response.send_message(f"`{title}` 에서 예약이 취소되었습니다.")
 
 
 async def setup(bot):
