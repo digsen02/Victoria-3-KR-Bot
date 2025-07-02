@@ -21,15 +21,22 @@ class ScheduleRegistrationSlashes(commands.Cog):
     @app_commands.command(name="reg", description="국가를 예약합니다.")
     @app_commands.describe(country="예약할 국가 이름")
     async def reg(self, interaction: discord.Interaction, country: str):
+        print("실행")
         plans = load_file("database", "multi.json")
         countries = load_file("database", "country.json")
         user_id = str(interaction.user.id)
         nearest_title, nearest_date = find_nearest(plans)
 
+        plans = load_file("database", "multi.json")
         if not plans:
             await interaction.response.send_message("플랜이 비어있습니다.", ephemeral=True)
             return
 
+        countries = load_file("database", "country.json")
+
+        nearest_title, nearest_date = find_nearest(plans)
+
+        user_id = str(interaction.user.id)
         if user_id not in plans[nearest_title]["players"]:
             await interaction.response.send_message("가장 가까운 플랜에 예약되어있지 않습니다.", ephemeral=True)
             return
