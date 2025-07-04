@@ -27,7 +27,7 @@ class ScheduleDeleteSlashes(commands.Cog):
                 player_info_list = plan.get("player_info", [])
                 for entry in player_info_list:
                     try:
-                        user_id, user_name, _ = entry.split("\\", 2)
+                        user_id, user_name, _ = entry.split("|", 2)
                         member = interaction.guild.get_member(int(user_id))
                         if member:
                             if member.guild_permissions.administrator:
