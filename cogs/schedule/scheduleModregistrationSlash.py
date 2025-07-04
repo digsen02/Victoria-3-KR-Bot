@@ -32,48 +32,34 @@ class ScheduleModregistrationSlashes(commands.Cog):
         if nearest_title not in plans:
             await interaction.response.send_message("해당 제목의 플랜이 존재하지 않습니다.", ephemeral=True)
             return
-        
-        print("존재함")
-        
-        if not any(e.startswith(f"{user_id}_") for e in plans[nearest_title]["player_info"]):
+                
+        if not any(e.startswith(f"{user_id}|") for e in plans[nearest_title]["player_info"]):
             await interaction.response.send_message("국가 예약이 되어있지 않습니다.", ephemeral=True)
             return
-        
-        print("존재함2")
-        
+                
         english_name = self.find_english_name(countries, country)
         if english_name is None:
             await interaction.response.send_message("존재하지 않는 국가입니다. 정확히 입력해주세요.", ephemeral=True)
             return
-        
-        print("존재함3")
-        
+                
         if english_name in plans[nearest_title]["occupied_nations"]:
             await interaction.response.send_message("이미 점유된 국가입니다.", ephemeral=True)
             return
         
-        print("존재함4")
-
-        entry = next((e for e in plans[nearest_title]["player_info"] if e.startswith(f"{user_id}_")), None)
+        entry = next((e for e in plans[nearest_title]["player_info"] if e.startswith(f"{user_id}|")), None)
         member = interaction.guild.get_member(interaction.user.id)
         display_name = member.display_name if member else interaction.user.name
 
-        print("여까지 실행됨")
-
         if entry:
             plans[nearest_title]["player_info"].remove(entry)
-            print("여까지 실행됨2-1")
-            n_user_id, user_name, b_country = entry.split("_", 2)
-            print("여까지 실행됨2")
+            n_user_id, user_name, b_country = entry.split("|", 2)
 
             if b_country in plans[nearest_title]["occupied_nations"]:
                 plans[nearest_title]["occupied_nations"].remove(b_country)
-                print("여까지 실행됨 3")
 
             member = interaction.guild.get_member(int(n_user_id))
             if member:
-                print("여까지 실행됨 4")
-                player_entry = f"{n_user_id}_{user_name}_{english_name}"
+                player_entry = f"{n_user_id}|{user_name}|{english_name}"
                 plans[nearest_title]["player_info"].append(player_entry)
                 plans[nearest_title]["occupied_nations"].append(str(english_name))
         

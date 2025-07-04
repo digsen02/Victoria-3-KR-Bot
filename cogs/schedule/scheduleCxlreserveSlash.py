@@ -27,11 +27,11 @@ class ScheduleCxlreserveSlashes(commands.Cog):
             await interaction.response.send_message("호스트는 예약을 취소할 수 없습니다.", ephemeral=True)
             return
 
-        entry = next((e for e in plans[title]["player_info"] if e.startswith(f"{user_id}_")), None)
+        entry = next((e for e in plans[title]["player_info"] if e.startswith(f"{user_id}|")), None)
 
         if entry:
             plans[title]["player_info"].remove(entry)
-            user_id, user_name, country = entry.split("_", 2)
+            user_id, user_name, country = entry.split("|", 2)
             plans[title]["occupied_nations"].remove(country)
 
             member = interaction.guild.get_member(int(user_id))
