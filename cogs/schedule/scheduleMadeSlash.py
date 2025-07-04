@@ -76,6 +76,11 @@ class ScheduleMadeSlash(commands.Cog):
                 await interaction.response.send_message("국가가 예약된 파일보다 가까운 날짜에 플랜을 생성할 수 없습니다.", ephemeral=True)
                 return
 
+        if start_dt < datetime.datetime.now():
+            await interaction.response.send_message("현재 날짜보다 뒤에 플랜을 생성할 수 없습니다.", ephemeral=True)
+            return
+
+
         for plan_name, plan_data in plans.items():
             if plan_data.get("start_date") == start_date:
                 await interaction.response.send_message("이미 해당 시간대에 플랜이 존재합니다.", ephemeral=True)

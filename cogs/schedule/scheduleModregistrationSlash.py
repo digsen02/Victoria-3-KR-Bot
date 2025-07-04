@@ -48,14 +48,14 @@ class ScheduleModregistrationSlashes(commands.Cog):
 
         if entry:
             plans[nearest_title]["player_info"].remove(entry)
-            n_user_id, user_name, b_country = entry.split("_", 2)
+            n_user_id, user_name, b_country = entry.split("|", 2)
 
             if b_country in plans[nearest_title]["occupied_nations"]:
                 plans[nearest_title]["occupied_nations"].remove(b_country)
 
             member = interaction.guild.get_member(int(n_user_id))
             if member:
-                player_entry = f"{n_user_id}|{display_name}|{english_name}"
+                player_entry = f"{n_user_id}_{display_name}_{english_name}"
                 plans[nearest_title]["player_info"].append(player_entry)
                 plans[nearest_title]["occupied_nations"].append(str(english_name))
         
