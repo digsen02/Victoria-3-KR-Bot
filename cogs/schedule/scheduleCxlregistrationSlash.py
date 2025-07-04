@@ -19,17 +19,15 @@ class ScheduleCxlregistrationSlashes(commands.Cog):
             await interaction.response.send_message("플랜이 없습니다.", ephemeral=True)
             return
 
-        if not any(e.startswith(f"|") for e in plans[nearest_title]["player_info"]):
+        if not any(e.startswith(f"{user_id}_") for e in plans[nearest_title]["player_info"]):
             await interaction.response.send_message("국가 예약이 되어있지 않습니다.", ephemeral=True)
             return
 
-        entry = next((e for e in plans[nearest_title]["player_info"] if e.startswith(f"{user_id}|")), None)
+        entry = next((e for e in plans[nearest_title]["player_info"] if e.startswith(f"{user_id}_")), None)
 
         if entry:
             plans[nearest_title]["player_info"].remove(entry)
-            user_id, user_name, country = entry.split("|", 2)
-
-
+            user_id, user_name, country = entry.split("_", 2)
 
             if country in plans[nearest_title]["occupied_nations"]:
                 plans[nearest_title]["occupied_nations"].remove(country)
