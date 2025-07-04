@@ -23,7 +23,7 @@ class ScheduleOverSlashes(commands.Cog):
                 player_info_list = plan.get("player_info", [])
                 for entry in player_info_list:
                     try:
-                        user_id, user_name, _ = entry.split("_", 2)
+                        user_id, user_name, _ = entry.split("\\", 2)
                         member = interaction.guild.get_member(int(user_id))
                         if member:
                             if member.guild_permissions.administrator:
@@ -36,7 +36,7 @@ class ScheduleOverSlashes(commands.Cog):
         del plans[nearest_title]
         save_file("database", "multi.json", plans)
 
-        await interaction.response.send_message(f"`{nearest_title}` 플랜이 삭제되었습니다.")
+        await interaction.response.send_message(f"`{nearest_title}` 플랜이 종료되었습니다.")
 
 async def setup(bot):
     await bot.add_cog(ScheduleOverSlashes(bot))

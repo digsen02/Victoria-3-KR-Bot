@@ -27,7 +27,7 @@ class ScheduleCxlregistrationSlashes(commands.Cog):
 
         if entry:
             plans[nearest_title]["player_info"].remove(entry)
-            user_id, user_name, country = entry.split("_", 2)
+            user_id, user_name, country = entry.split("\\", 2)
 
             if country in plans[nearest_title]["occupied_nations"]:
                 plans[nearest_title]["occupied_nations"].remove(country)

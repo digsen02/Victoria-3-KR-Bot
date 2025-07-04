@@ -31,7 +31,7 @@ class ScheduleCxlreserveSlashes(commands.Cog):
 
         if entry:
             plans[title]["player_info"].remove(entry)
-            user_id, user_name, country = entry.split("_", 2)
+            user_id, user_name, country = entry.split("\\", 2)
             plans[title]["occupied_nations"].remove(country)
 
             member = interaction.guild.get_member(int(user_id))

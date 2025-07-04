@@ -58,7 +58,7 @@ class ScheduleRegistrationSlashes(commands.Cog):
                 await interaction.response.send_message("이미 국가를 예약하셨습니다.", ephemeral=True)
                 return
 
-        player_entry = f"{user_id}_{display_name}_{english_name}"
+        player_entry = f"{user_id}\\{display_name}\\{english_name}"
         plans[nearest_title]["player_info"].append(player_entry)
         plans[nearest_title]["occupied_nations"].append(str(english_name))
         save_file("database", "multi.json", plans)

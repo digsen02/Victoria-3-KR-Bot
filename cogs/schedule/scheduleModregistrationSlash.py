@@ -48,7 +48,7 @@ class ScheduleModregistrationSlashes(commands.Cog):
 
         if entry:
             plans[nearest_title]["player_info"].remove(entry)
-            n_user_id, user_name, b_country = entry.split("_", 2)
+            n_user_id, user_name, b_country = entry.split("\\", 2)
 
             if b_country in plans[nearest_title]["occupied_nations"]:
                 plans[nearest_title]["occupied_nations"].remove(b_country)
