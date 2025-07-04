@@ -29,7 +29,7 @@ class ScheduleModregistrationSlashes(commands.Cog):
             await interaction.response.send_message("플랜이 없습니다.", ephemeral=True)
             return
 
-        if not any(e.startswith(f"{user_id}_") for e in plans[nearest_title]["player_info"]):
+        if not any(e.startswith(f"{user_id}|") for e in plans[nearest_title]["player_info"]):
             await interaction.response.send_message("국가 예약이 되어있지 않습니다.", ephemeral=True)
             return
         
@@ -42,20 +42,20 @@ class ScheduleModregistrationSlashes(commands.Cog):
             await interaction.response.send_message("이미 점유된 국가입니다.", ephemeral=True)
             return
 
-        entry = next((e for e in plans[nearest_title]["player_info"] if e.startswith(f"{user_id}_")), None)
+        entry = next((e for e in plans[nearest_title]["player_info"] if e.startswith(f"|")), None)
         member = interaction.guild.get_member(interaction.user.id)
         display_name = member.display_name if member else interaction.user.name
 
         if entry:
             plans[nearest_title]["player_info"].remove(entry)
-            n_user_id, user_name, b_country = entry.split("|", 2)
+            n_user_id, user_name, b_country = entry.split("_", 2)
 
             if b_country in plans[nearest_title]["occupied_nations"]:
                 plans[nearest_title]["occupied_nations"].remove(b_country)
 
             member = interaction.guild.get_member(int(n_user_id))
             if member:
-                player_entry = f"{n_user_id}_{display_name}_{english_name}"
+                player_entry = f"{n_user_id}|{display_name}|{english_name}"
                 plans[nearest_title]["player_info"].append(player_entry)
                 plans[nearest_title]["occupied_nations"].append(str(english_name))
         

@@ -54,7 +54,7 @@ class ScheduleRegistrationSlashes(commands.Cog):
         display_name = member.display_name if member else interaction.user.name
 
         for info in plans[nearest_title]["player_info"]:
-            if info.startswith(f"{user_id}_"):
+            if info.startswith(f"|"):
                 await interaction.response.send_message("이미 국가를 예약하셨습니다.", ephemeral=True)
                 return
 
