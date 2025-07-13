@@ -1,16 +1,13 @@
+from typing import Optional
+
 import discord
 from discord import Embed
 from discord.ui import Button, View, Select
 
 class Page:
-    def __init__(self, embed : Embed, *items):
+    def __init__(self, embed : Embed, view: Optional[View] = None):
         self.embed = embed
-        self.view = None
-        if items :
-            view = View()
-            for _item in items :
-                view.add_item(_item)
-            self.view = view
+        self.view = view
 
     def __iter__(self):
         yield from [self.embed, self.view]
@@ -77,6 +74,9 @@ class NextButton(Button):
     def __init__(self, label: str, pages, current_page=None):
         self.pages = pages
         self.current_page = current_page
+
+        print("test")
+
         if self.pages and current_page :
             if not self.pages.pages[len(self.pages.pages) - 1] is current_page :
                 super().__init__(label=label, disabled= False)
@@ -85,10 +85,18 @@ class NextButton(Button):
 
     async def callback(self, interaction: discord.Interaction):
         try:
+            print("test2")
+            print(self.current_page)
+            print(self.pages.pages.index(self.current_page))
             idx = self.pages.pages.index(self.current_page)
+
+
             next_page = self.pages.pages[idx + 1]
+            print(next_page)
 
             self.pages.current_page = next_page
+            print(self.pages.current_page is self.pages.pages[1])
+
 
             await interaction.response.edit_message(
                 embed=next_page.embed,

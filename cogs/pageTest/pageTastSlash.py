@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands, Embed
 from utils.page import Page, Pages
 from discord.ui import Button, View, Select, item
+from discord import SelectOption
 
 class PageTestSlash(commands.Cog):
     def __init__(self, bot:commands.Cog):
@@ -14,11 +15,18 @@ class PageTestSlash(commands.Cog):
     async def testing(self, interaction: discord.Interaction):
         view1 = View()
         button1 = Button(label="테스트1", disabled=True)
-        select1 = Select(custom_id="test1")
+
+        select1 = Select(
+            custom_id="test1",
+            options=[
+                SelectOption(label="옵션 1", value="1"),
+                SelectOption(label="옵션 2", value="2")
+            ]
+        )
         view1.add_item(button1)
         page1 = Page(
             Embed(title="페이지 1", description="이것은 첫 번째 페이지입니다."),
-            *view1
+            view1
         )
 
         view2 = View()
@@ -29,12 +37,18 @@ class PageTestSlash(commands.Cog):
 
         page2 = Page(
             Embed(title="페이지 2", description="이것은 두 번째 페이지입니다."),
-            *view2
+            view2
         )
 
         view3 = View()
 
-        select2 = Select(custom_id="test1")
+        select2 = Select(
+            custom_id="test2",
+            options=[
+                SelectOption(label="옵션 1", value="1"),
+                SelectOption(label="옵션 2", value="2")
+            ]
+        )
         button2 = Button(label="테스트2", disabled=True)
 
         view3.add_item(select2)
@@ -42,7 +56,7 @@ class PageTestSlash(commands.Cog):
 
         page3 = Page(
             Embed(title="페이지 3", description="이것은 세 번째 페이지입니다."),
-            *view3
+            view3
         )
         pages = Pages(page1, page2, page3)
 
