@@ -1,13 +1,9 @@
-from idlelib.textview import ViewFrame
-from operator import index
-from typing import Optional
-
 import discord
 from discord import Embed
-from discord.ui import Button, View, Select, item
+from discord.ui import Button, View, Select
 
 class Page:
-    def __init__(self, embed : Embed, *items : item):
+    def __init__(self, embed : Embed, *items):
         self.embed = embed
         self.view = None
         if items :
