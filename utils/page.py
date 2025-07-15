@@ -46,6 +46,8 @@ class PageNavigationButton(Button):
             )
 
 class SelectNavigationButton(Button):
+    ##TODO : 여기서 실질적 작동을 구현 해야함.
+
     def __init__(self, label: str, pages: 'Pages', current_page: Page, is_prev: bool = False):
         self.pages = pages
         self.current_page = current_page
@@ -79,6 +81,7 @@ class SelectNavigationButton(Button):
 
 
 class Pages:
+
     def __init__(self, *pages: Page, page_prev_button_label: str = "◀️", page_next_button_label: str = "▶️"):
         self.pages: Tuple[Page, ...] = pages
         self.current_page: Page = pages[0] if pages else None
@@ -91,11 +94,10 @@ class Pages:
             get_current_file_and_line()
             in_Select = False
 
-            print(page.view.children)
-            print(isinstance(page.view.children, Select))
+
 
             for _item in page.view.children :
-                if isinstance(page.view.children, Select):
+                if isinstance(_item, Select):
                     in_Select = True
                     get_current_file_and_line()
 
