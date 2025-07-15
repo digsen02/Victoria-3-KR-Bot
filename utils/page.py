@@ -1,109 +1,125 @@
-from typing import Optional
-
+from typing import Optional, Tuple
 import discord
-from discord import Embed
+from discord import Embed, Interaction
 from discord.ui import Button, View, Select
 
+from utils.Debuggin import get_current_file_and_line
+
+
 class Page:
-    def __init__(self, embed : Embed, view: Optional[View] = None):
+    def __init__(self, embed: Embed, view: Optional[View] = None):
         self.embed = embed
-        self.view = view
+        self.view = view or View(timeout=None)
 
     def __iter__(self):
         yield from [self.embed, self.view]
 
+class PageNavigationButton(Button):
+    def __init__(self, label: str, pages: 'Pages', current_page: Page, is_prev: bool = False):
+        self.pages = pages
+        self.current_page = current_page
+        self.is_prev = is_prev
+        disabled = self._is_disabled()
+        super().__init__(label=label, style = discord.ButtonStyle.grey, disabled=disabled)
+
+    def _is_disabled(self) -> bool:
+        if not self.pages or not self.current_page:
+            return True
+        idx = self.pages.pages.index(self.current_page)
+        return idx == 0 if self.is_prev else idx == len(self.pages.pages) - 1
+
+    async def callback(self, interaction: Interaction):
+        try:
+            idx = self.pages.pages.index(self.current_page)
+            next_idx = idx - 1 if self.is_prev else idx + 1
+            next_page = self.pages.pages[next_idx]
+            self.pages.current_page = next_page
+
+            for item in next_page.view.children:
+                if isinstance(item, PageNavigationButton):
+                    item.disabled = item._is_disabled()
+
+            await interaction.response.edit_message(embed=next_page.embed, view=next_page.view)
+        except (ValueError, IndexError):
+            await interaction.response.send_message(
+                f"{'◀️' if self.is_prev else '▶️'} 페이지가 없습니다.", ephemeral=True
+            )
+
+class SelectNavigationButton(Button):
+    def __init__(self, label: str, pages: 'Pages', current_page: Page, is_prev: bool = False):
+        self.pages = pages
+        self.current_page = current_page
+        self.is_prev = is_prev
+        disabled = self._is_disabled()
+        super().__init__(label=label, style = discord.ButtonStyle.grey, disabled=disabled)
+
+        get_current_file_and_line()
+    def _is_disabled(self) -> bool:
+        get_current_file_and_line()
+
+        if not self.pages or not self.current_page:
+            return True
+
+        idx = self.pages.pages.index(self.current_page)
+        get_current_file_and_line()
+        if self.is_prev and idx == 0:
+            get_current_file_and_line()
+            return True
+        if not self.is_prev and idx == len(self.pages.pages) - 1:
+            get_current_file_and_line()
+            return True
+
+        for _item in self.current_page.view.children:
+            get_current_file_and_line()
+
+            if isinstance(_item, Select) and len(_item.options) > 25:
+                get_current_file_and_line()
+                return True
+        return False
+
+
 class Pages:
-    def __init__(self, *pages : Page,current_page = None ,prev_button_label : str = "이전", next_button_label : str = "다음"):
-        self.pages = pages
+    def __init__(self, *pages: Page, page_prev_button_label: str = "◀️", page_next_button_label: str = "▶️"):
+        self.pages: Tuple[Page, ...] = pages
+        self.current_page: Page = pages[0] if pages else None
+        self.page_prev_button_label = page_prev_button_label
+        self.page_next_button_label = page_next_button_label
 
-        if current_page :
-            self.current_page = current_page
-        else :
-            self.current_page = self.pages[0]
+        get_current_file_and_line()
 
+        for page in self.pages:
+            get_current_file_and_line()
+            in_Select = False
 
-        # pages에서 받아온 page들을 순회함
-        for _page in self.pages:
-            prevButton = PrevButton(prev_button_label, pages=self, current_page=_page)
-            nextButton = NextButton(next_button_label, pages=self, current_page=_page)
-            # _page.view가 존재 한다면 _page.view의 children을 한칸씩 밀어서 맨 앞엔 prevButton, 맨 뒤엔 nextButton이 들어가게 함
-            if _page.view:
-                old_children = list(_page.view.children)
-                _page.view.clear_items()
-                _page.view.add_item(prevButton)
+            print(page.view.children)
+            print(isinstance(page.view.children, Select))
 
-                for _item in old_children:
-                    _page.view.add_item(_item)
+            for _item in page.view.children :
+                if isinstance(page.view.children, Select):
+                    in_Select = True
+                    get_current_file_and_line()
 
-                _page.view.add_item(nextButton)
-            else :
-                _page.view = View()
-                _page.view.add_item(prevButton)
-                _page.view.add_item(nextButton)
+            self.page_prev_button = PageNavigationButton(self.page_prev_button_label, self, page, is_prev=True)
+            self. page_next_button = PageNavigationButton(self.page_next_button_label, self, page, is_prev=False)
+            get_current_file_and_line()
 
+            if in_Select:
+                get_current_file_and_line()
+                self.select_prev_button = SelectNavigationButton("tset1", self, page, is_prev=True)
+                self.select_next_button = SelectNavigationButton("tset2", self, page, is_prev=False)
 
-class PrevButton(Button):
-    def __init__(self, label: str, pages, current_page=None):
-        self.pages = pages
-        self.current_page = current_page
-        if self.pages and current_page :
-            if not self.pages.pages[0] is current_page :
-                super().__init__(label=label, disabled= False)
-            else:
-                super().__init__(label=label, disabled= True)
+            old_children = list(page.view.children) if page.view else []
+            page.view.clear_items()
+            get_current_file_and_line()
 
-    async def callback(self, interaction: discord.Interaction):
-        try:
-            idx = self.pages.pages.index(self.current_page)
-            print(idx)
-            next_page = self.pages.pages[idx - 1]
+            if in_Select:
+                page.view.add_item(self.select_prev_button)
+            page.view.add_item(self.page_prev_button)
+            get_current_file_and_line()
 
-            self.pages.current_page = next_page
+            for item in old_children:
+                page.view.add_item(item)
+            page.view.add_item(self.page_next_button)
 
-            await interaction.response.edit_message(
-                embed=next_page.embed,
-                view=next_page.view
-            )
-
-        except (ValueError, IndexError):
-            await interaction.response.send_message(
-                "이전 페이지가 없습니다.", ephemeral=True
-            )
-
-class NextButton(Button):
-    def __init__(self, label: str, pages, current_page=None):
-        self.pages = pages
-        self.current_page = current_page
-
-        print("test")
-
-        if self.pages and current_page :
-            if not self.pages.pages[len(self.pages.pages) - 1] is current_page :
-                super().__init__(label=label, disabled= False)
-            else:
-                super().__init__(label=label, disabled= True)
-
-    async def callback(self, interaction: discord.Interaction):
-        try:
-            print("test2")
-            print(self.current_page)
-            print(self.pages.pages.index(self.current_page))
-            idx = self.pages.pages.index(self.current_page)
-
-
-            next_page = self.pages.pages[idx + 1]
-            print(next_page)
-
-            self.pages.current_page = next_page
-            print(self.pages.current_page is self.pages.pages[1])
-
-
-            await interaction.response.edit_message(
-                embed=next_page.embed,
-                view=next_page.view
-            )
-
-        except (ValueError, IndexError):
-            await interaction.response.send_message(
-                "다음 페이지가 없습니다.", ephemeral=True
-            )
+            if in_Select:
+                page.view.add_item(self.select_next_button)

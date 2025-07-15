@@ -8,14 +8,30 @@
     "ruleset": 1,
     "min_players": 2,
     "players": [
-      "718651177251766283"
+      "718651177251766283",
+      "721290589340958761"
     ],
-    "current_players": 1,
+    "current_players": 2,
     "occupied_nations": [
       "france"
     ],
     "player_info": [
       "718651177251766283|현무|france"
     ]
+  },
+  "ㅅㄷㄴㅅ": {
+    "unique_key": "1217815152506834974_721290589340958761_2025-07-20_02:03",
+    "guild_id": "1217815152506834974",
+    "channel_id": "1323622063986053150",
+    "host_id": "721290589340958761",
+    "start_date": "2025-07-20_02:03",
+    "ruleset": 3,
+    "min_players": 2,
+    "players": [
+      "721290589340958761"
+    ],
+    "current_players": 1,
+    "occupied_nations": [],
+    "player_info": []
   }
 }
