@@ -9,6 +9,7 @@ from utils.FindNearest import *
 import datetime
 
 PLAN_FILE = os.path.join("database", "multi.json")
+RULE_FILE = os.path.join("database", "ruleset.json")
 
 class ScheduleMadeSlash(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -17,6 +18,19 @@ class ScheduleMadeSlash(commands.Cog):
         if not isinstance(plans, dict):
             plans = {}
             save_file("database", "multi.json", plans)
+
+    def load_ruleset_names(path: str = RULE_FILE) -> list[str]:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        
+        ruleset = []
+        for category_dict in data.values():
+            ruleset.extend(category_dict.keys())
+
+        return ruleset
+    
+    ruleset_list = load_ruleset_names()
+    DEFAULT_RULESET = ruleset_list[0]
 
     @app_commands.command(name="make_schedule", description="멀티 플랜을 생성합니다.")
     @app_commands.describe(
@@ -28,19 +42,25 @@ class ScheduleMadeSlash(commands.Cog):
         ruleset="룰셋",
         min_players="최소 시작 인원"
     )
+    @app_commands.choices(
+        ruleset=[
+            discord.app_commands.Choice(name=name, value=name) for name in ruleset_list
+        ]
+    )
 
     async def make_schedule(
         self,
         interaction: discord.Interaction,
         plan_name: str,
-        ruleset: int,
         day: int,
         hour: int,
         minute: int,
+        ruleset: Optional[str] = DEFAULT_RULESET,
         year: Optional[int] = datetime.datetime.today().year,
         month: Optional[int] = datetime.datetime.today().month,
         min_players: Optional[int] = 2
     ):
+        
         try:
             validate_year(year)
             validate_month(month)

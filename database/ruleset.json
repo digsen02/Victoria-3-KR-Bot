@@ -1,0 +1,12 @@
+{
+    "official" : {
+        "standard" : {
+            "mod" : true,
+            "FGP" : false
+        },
+        "vanilla" : {
+            "mod" : false,
+            "FGP" : false
+        }
+    }
+}
