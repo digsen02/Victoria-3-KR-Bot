@@ -1,6 +1,10 @@
 {
     "official" : {
-        "standard" : {
+        "peng_mod" : {
+            "mod" : true,
+            "FGP" : false
+        },
+        "seol_mod" : {
             "mod" : true,
             "FGP" : false
         },
