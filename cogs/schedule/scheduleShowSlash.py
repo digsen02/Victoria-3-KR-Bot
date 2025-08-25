@@ -135,7 +135,7 @@ class ScheduleShowSlash(commands.Cog):
                                 break
 
                         await update_buttons(inter2)
-                        await inter2.followup.send(f"{interaction.user.mention}님이 `{title}`에 참전!")
+                        await inter2.followup.send(f"{inter2.user.mention}님이 `{title}`에 참전!")
 
                 reserve_btn.callback = reserve_callback
                 view.add_item(reserve_btn)
