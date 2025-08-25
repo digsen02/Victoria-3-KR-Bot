@@ -132,10 +132,13 @@ class ScheduleMadeSlash(commands.Cog):
         if title not in updated:
             await interaction.response.send_message("저장 중 문제가 발생했습니다. 다시 시도해주세요.", ephemeral=True)
             return
+        
+        role_id = 0  # 멀티 알림 id 넣기
+        role_mention = f"<@&{role_id}>"
 
         embed = discord.Embed(
             title="📅 멀티 일정 생성 완료!",
-            description=f"{interaction.user.mention}님이 예약자로 등록되었습니다!",
+            description=f"{role_mention} {interaction.user.mention}님이 플랜을 생성하였습니다!",
             color=discord.Color.green()
         )
         embed.add_field(name="플랜 제목", value=f"{title}", inline=False)
