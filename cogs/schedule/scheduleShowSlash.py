@@ -6,7 +6,6 @@ from utils.dataFileManager import load_file, save_file
 from utils.page import Page
 
 class PagesManager:
-    """Pages와 Buttons 통합 관리"""
     def __init__(self, pages: list[Page]):
         self.pages = pages
         self.index = 0
@@ -39,14 +38,13 @@ class ScheduleShowSlash(commands.Cog):
             await interaction.followup.send(embed=embed)
             return
 
-        # Page 객체 생성
         pages = []
         for idx, (title, info) in enumerate(plans.items(), start=1):
             embed = Embed(title=f"{idx}번째 플랜", colour=discord.Color.green())
             embed.add_field(name="플랜 제목", value=title, inline=False)
-            embed.add_field(name=":white_check_mark: 예약일시", value=info.get("start_date"), inline=False)
-            embed.add_field(name=":scroll: 룰셋", value=str(info.get("ruleset")), inline=False)
-            embed.add_field(name=":busts_in_silhouette: 최소 인원", value=str(info.get("min_players")), inline=False)
+            embed.add_field(name="✅ 예약일시", value=info.get("start_date"), inline=False)
+            embed.add_field(name="📜 룰셋", value=str(info.get("ruleset")), inline=True)
+            embed.add_field(name="👥 최소 인원", value=str(info.get("min_players")), inline=True)
             members = ", ".join([f"<@{uid}>" for uid in info.get("players", [])]) or "없음"
             embed.add_field(name="플레이어", value=members, inline=False)
             embed.set_footer(text="Victoria3 KR Server")
@@ -56,7 +54,6 @@ class ScheduleShowSlash(commands.Cog):
         view = View()
 
         async def update_buttons(inter: discord.Interaction):
-            """현재 페이지와 사용자 상태에 맞춰 버튼 재생성 및 플레이어 목록 갱신"""
             view.clear_items()
             current_page = page_manager.current_page
             embed = current_page.embed
@@ -64,7 +61,6 @@ class ScheduleShowSlash(commands.Cog):
             user_id = str(inter.user.id)
             plans = load_file("database", "multi.json")
 
-            # 임베드 플레이어 목록 업데이트
             if title in plans:
                 members = ", ".join([f"<@{uid}>" for uid in plans[title].get("players", [])]) or "없음"
                 for i, field in enumerate(embed.fields):
@@ -72,8 +68,7 @@ class ScheduleShowSlash(commands.Cog):
                         embed.set_field_at(i, name="플레이어", value=members, inline=False)
                         break
 
-            # 이전 버튼
-            prev_btn = Button(label="◀", style=discord.ButtonStyle.secondary)
+            prev_btn = Button(label="◀", style=discord.ButtonStyle.primary)
             async def prev_callback(prev_inter):
                 page_manager.prev_page()
                 await update_buttons(prev_inter)
@@ -81,7 +76,6 @@ class ScheduleShowSlash(commands.Cog):
             prev_btn.callback = prev_callback
             view.add_item(prev_btn)
 
-            # 다음 버튼
             next_btn = Button(label="▶", style=discord.ButtonStyle.primary)
             async def next_callback(next_inter):
                 page_manager.next_page()
@@ -89,7 +83,6 @@ class ScheduleShowSlash(commands.Cog):
                 await next_inter.response.edit_message(embed=page_manager.current_page.embed, view=view)
             next_btn.callback = next_callback
 
-            # 예약 / 예약 취소 버튼
             if title in plans and user_id in plans[title]["players"]:
                 cancel_btn = Button(label="예약 취소", style=discord.ButtonStyle.danger)
 
@@ -105,7 +98,6 @@ class ScheduleShowSlash(commands.Cog):
                         await inter2.followup.send("호스트는 예약을 취소할 수 없습니다.", ephemeral=True)
                         return
 
-                    # player_info / occupied_nations / 닉네임 복원
                     entry = next((e for e in plans[title]["player_info"] if e.startswith(f"{user_id}|")), None)
                     if entry:
                         plans[title]["player_info"].remove(entry)
@@ -126,7 +118,7 @@ class ScheduleShowSlash(commands.Cog):
                 cancel_btn.callback = cancel_callback
                 view.add_item(cancel_btn)
             else:
-                reserve_btn = Button(label="예약", style=discord.ButtonStyle.success)
+                reserve_btn = Button(label="예약", style=discord.ButtonStyle.secondary)
 
                 async def reserve_callback(inter2: discord.Interaction):
                     await inter2.response.defer(ephemeral=True)
@@ -136,7 +128,6 @@ class ScheduleShowSlash(commands.Cog):
                         plans[title]["current_players"] += 1
                         save_file("database", "multi.json", plans)
 
-                        # 임베드 플레이어 목록 업데이트
                         members = ", ".join([f"<@{uid}>" for uid in plans[title]["players"]]) or "없음"
                         for i, field in enumerate(embed.fields):
                             if field.name == "플레이어":
@@ -151,7 +142,6 @@ class ScheduleShowSlash(commands.Cog):
 
             view.add_item(next_btn)
 
-        # 최초 버튼 세팅 및 메시지 전송
         await update_buttons(interaction)
         await interaction.followup.send(embed=page_manager.current_page.embed, view=view)
 
