@@ -147,7 +147,7 @@ class ScheduleMadeSlash(commands.Cog):
         embed.add_field(name="👥 최소 인원", value=str(min_players), inline=True)
         embed.set_footer(text="Victoria3 KR Server")
 
-        await interaction.response.send_message(embed=embed, allowed_mentions=discord.AllowedMentions(roles=True))
+        await interaction.response.send_message(content=role_mention,embed=embed,allowed_mentions=discord.AllowedMentions(roles=True))
 
 async def setup(bot):
     await bot.add_cog(ScheduleMadeSlash(bot))
