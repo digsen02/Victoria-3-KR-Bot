@@ -133,7 +133,7 @@ class ScheduleMadeSlash(commands.Cog):
             await interaction.response.send_message("저장 중 문제가 발생했습니다. 다시 시도해주세요.", ephemeral=True)
             return
         
-        role_id = 0  # 멀티 알림 id 넣기
+        role_id = 1310124504357539840
         role_mention = f"<@&{role_id}>"
 
         embed = discord.Embed(
