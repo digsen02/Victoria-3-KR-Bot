@@ -138,7 +138,7 @@ class ScheduleMadeSlash(commands.Cog):
 
         embed = discord.Embed(
             title="📅 멀티 일정 생성 완료!",
-            description=f"{role_mention} {interaction.user.mention}님이 플랜을 생성하였습니다!",
+            description=f"{interaction.user.mention}님이 플랜을 생성하였습니다!",
             color=discord.Color.green()
         )
         embed.add_field(name="플랜 제목", value=f"{title}", inline=False)
